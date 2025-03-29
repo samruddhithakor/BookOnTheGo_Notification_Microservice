@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Success</title>
+</head>
+<body style="font-family:Arial,sans-serif; background:#f4f4f4; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:10px;">
+        <h2 style="color:#28a745;">Payment Received</h2>
+
+        <p>Hi <strong th:text="${name}">John</strong>,</p>
+
+        <p>Thank you for your payment. Your ticket for <strong th:text="${eventName}">Event</strong> is confirmed.</p>
+
+        <div style="background:#f9f9f9; padding:10px; border-left:5px solid #4CAF50;">
+            <p><strong>Date:</strong> <span th:text="${eventDate}">2025-06-10</span></p>
+            <p><strong>Time:</strong> <span th:text="${eventTime}">10:00 AM</span></p>
+            <p><strong>Venue:</strong> <span th:text="${venue}">Conference Hall</span></p>
+        </div>
+
+        <p>🎫 Your e-ticket with QR code is attached.</p>
+
+        <hr style="margin:30px 0;">
+        <p style="font-size:12px; color:#888;">To unsubscribe from notifications, <a th:href="${unsubscribeLink}">click here</a>.</p>
+    </div>
+</body>
+</html>
