@@ -14,4 +14,5 @@ public class EventNotificationRequest {
     private String eventTime;
     private String venue;
     private String promoImageUrl;
+    private String userPhone;
 }

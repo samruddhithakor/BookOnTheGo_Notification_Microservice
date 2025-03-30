@@ -15,4 +15,5 @@ public class PaymentNotificationRequest {
     private String eventDate;
     private String eventTime;
     private String venue;
+    private String eventId;
 }

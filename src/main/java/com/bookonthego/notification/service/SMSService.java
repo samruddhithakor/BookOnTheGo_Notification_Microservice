@@ -10,14 +10,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SMSService {
     @Value("${twilio.account.sid}")
-private String twilioSid;
+    private String twilioSid;
 
-@Value("${twilio.auth.token}")
-private String twilioToken;
+    @Value("${twilio.auth.token}")
+    private String twilioToken;
 
-@Value("${twilio.phone.number}")
-private String senderNumber;
-
+    @Value("${twilio.phone.number}")
+    private String senderNumber;
 
     public void sendSMS(String toNumber, String body) {
         if (twilioSid.isBlank() || twilioToken.isBlank()) {

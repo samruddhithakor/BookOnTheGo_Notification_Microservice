@@ -1,2 +1,45 @@
-target/
-application.yml
+# macOS system files
+.DS_Store
+
+# IDEs and editors
+/.idea/
+/*.iml
+*.log
+*.swp
+.vscode/
+
+# Build and Maven
+/target/
+/build/
+/out/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Environment config
+.env
+*.local
+application-*.yml
+application-*.properties
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+logs/
+*.log
+
+# Thumbnails and temp files
+*.tmp
+*.bak
+*.orig
+*.save
+
+# JetBrains Rider
+.idea/
+
+# OS generated
+Thumbs.db
+ehthumbs.db
+Icon?

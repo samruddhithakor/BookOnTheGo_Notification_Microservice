@@ -1,22 +1,22 @@
 package com.bookonthego.notification.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 
-@Entity
-@Table(name = "subscriber")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
+@Table(name = "subscribers")
 public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
-    @Builder.Default
-    private boolean subscribed = true;
+    @Column(nullable = false)
+    private boolean subscribed;
 }

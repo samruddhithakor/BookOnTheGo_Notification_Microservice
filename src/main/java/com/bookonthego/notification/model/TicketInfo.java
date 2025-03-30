@@ -1,7 +1,7 @@
-// 📁 model/TicketInfo.java
 package com.bookonthego.notification.model;
 
 import lombok.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter
