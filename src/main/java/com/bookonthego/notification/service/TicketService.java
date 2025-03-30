@@ -25,9 +25,9 @@ public class TicketService {
 
     private final RestTemplate restTemplate;
 
-    // @Value("${booking-service.url}")
+    @Value("${booking-service.url}")
     private String bookingServiceUrl; // Use values from configuration
-    // @Value("${event-service.url}")
+    @Value("${event-service.url}")
     private String eventServiceUrl;   // Use values from configuration
 
     public File generateTicketAsPDF(BookingNotificationRequest request) throws Exception {

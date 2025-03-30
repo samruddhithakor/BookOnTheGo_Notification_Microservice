@@ -13,7 +13,7 @@ public class AuthServiceClient {
 
     private final RestTemplate restTemplate;
 
-    // @Value("${microservices.auth-service-url}")
+    @Value("${microservices.auth-service-url}")
     private String authServiceUrl;
 
     public ResponseEntity<String> subscribe(String email, String token) {
