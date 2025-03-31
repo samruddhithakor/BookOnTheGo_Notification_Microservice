@@ -15,6 +15,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
@@ -29,9 +30,10 @@ public class EmailService {
     private final TicketService ticketService;
     private final SubscriberRepository subscriberRepository;
 
+    private static final String BASE_URL = "http://localhost:8084/notify";
+
     public void sendBookingConfirmation(BookingNotificationRequest request) {
         try {
-            // Use data directly from request
             EventNotificationRequest event = EventNotificationRequest.builder()
                     .eventId(request.getEventId())
                     .eventName(request.getEventName())
@@ -53,7 +55,7 @@ public class EmailService {
             context.setVariable("eventTime", event.getEventTime());
             context.setVariable("venue", event.getVenue());
             context.setVariable("calendarLink", generateGoogleCalendarLink(event));
-            context.setVariable("unsubscribeLink", "http://localhost:8082/notify/unsubscribe?email=" + request.getUserEmail());
+            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + request.getUserEmail());
 
             String htmlContent = templateEngine.process("booking-confirmation.html", context);
             helper.setText(htmlContent, true);
@@ -120,7 +122,7 @@ public class EmailService {
             context.setVariable("eventDate", event.getEventDate());
             context.setVariable("eventTime", event.getEventTime());
             context.setVariable("venue", event.getVenue());
-            context.setVariable("unsubscribeLink", "http://localhost:8082/unsubscribe?email=" + request.getUserEmail());
+            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + request.getUserEmail());
 
             String htmlContent = templateEngine.process("payment-success.html", context);
             helper.setText(htmlContent, true);
@@ -149,36 +151,110 @@ public class EmailService {
     }
 
     public void notifySubscribersOfNewEvent(EventNotificationRequest event) {
-        List<Subscriber> subscribers = subscriberRepository.findAll()
-                .stream()
-                .filter(Subscriber::isSubscribed)
-                .toList();
+    List<Subscriber> subscribers = subscriberRepository.findAll()
+            .stream()
+            .filter(Subscriber::isSubscribed)
+            .toList();
 
-        for (Subscriber s : subscribers) {
-            try {
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    for (Subscriber s : subscribers) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-                helper.setTo(s.getEmail());
-                helper.setSubject("New Event: " + event.getEventName());
+            helper.setTo(s.getEmail());
+            helper.setSubject("🎉 New Event: " + event.getEventName());
 
-                Context context = new Context();
-                context.setVariable("eventName", event.getEventName());
-                context.setVariable("eventDate", event.getEventDate());
-                context.setVariable("eventTime", event.getEventTime());
-                context.setVariable("venue", event.getVenue());
-                context.setVariable("promoImageUrl", event.getPromoImageUrl());
-                context.setVariable("unsubscribeLink", "http://localhost:8082/unsubscribe?email=" + s.getEmail());
+            Context context = new Context();
+            context.setVariable("eventName", event.getEventName());
+            context.setVariable("eventDate", event.getEventDate());
+            context.setVariable("eventTime", event.getEventTime());
+            context.setVariable("venue", event.getVenue());
+            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + s.getEmail());
 
-                String html = templateEngine.process("event-created.html", context);
-                helper.setText(html, true);
+            String html = templateEngine.process("event-created.html", context);
+            helper.setText(html, true);
 
-                mailSender.send(message);
-                log.info("Sent new event promo to {}", s.getEmail());
+            mailSender.send(message);
+            log.info("Sent NEW EVENT promo to {}", s.getEmail());
 
-            } catch (Exception e) {
-                log.error("Failed to send event promo email to " + s.getEmail(), e);
-            }
+        } catch (Exception e) {
+            log.error("Failed to send NEW EVENT promo email to " + s.getEmail(), e);
+        }
+    }
+}
+
+public void notifySubscribersOfUpdatedEvent(EventNotificationRequest event) {
+    List<Subscriber> subscribers = subscriberRepository.findAll()
+            .stream()
+            .filter(Subscriber::isSubscribed)
+            .toList();
+
+    for (Subscriber s : subscribers) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(s.getEmail());
+            helper.setSubject("📢 Event Updated: " + event.getEventName());
+
+            Context context = new Context();
+            context.setVariable("eventName", event.getEventName());
+            context.setVariable("eventDate", event.getEventDate());
+            context.setVariable("eventTime", event.getEventTime());
+            context.setVariable("venue", event.getVenue());
+            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + s.getEmail());
+
+            String html = templateEngine.process("event-updated.html", context);
+            helper.setText(html, true);
+
+            mailSender.send(message);
+            log.info("Sent updated event email to {}", s.getEmail());
+
+        } catch (Exception e) {
+            log.error("Failed to send updated event email to " + s.getEmail(), e);
+        }
+    }
+}
+
+    public void sendSubscriptionConfirmation(String email) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(email);
+            helper.setSubject("You're Subscribed to BookOnTheGo!");
+
+            Context context = new Context();
+            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + email);
+
+            String htmlContent = templateEngine.process("subscription-confirmation.html", context);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+            log.info("Sent subscription confirmation to {}", email);
+        } catch (Exception e) {
+            log.error("Failed to send subscription confirmation to " + email, e);
+        }
+    }
+
+    public void sendUnsubscriptionConfirmation(String email) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(email);
+            helper.setSubject("You've Unsubscribed from BookOnTheGo");
+
+            Context context = new Context();
+            context.setVariable("resubscribeLink", BASE_URL + "/subscribe?email=" + email);
+
+            String htmlContent = templateEngine.process("unsubscription-confirmation.html", context);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+            log.info("Sent unsubscription confirmation to {}", email);
+        } catch (Exception e) {
+            log.error("Failed to send unsubscription confirmation to " + email, e);
         }
     }
 }

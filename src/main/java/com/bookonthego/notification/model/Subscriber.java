@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "subscribers")
+@Table(name = "subscribers", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

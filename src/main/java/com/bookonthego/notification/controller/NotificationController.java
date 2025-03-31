@@ -16,7 +16,6 @@ public class NotificationController {
 
     private final EmailService emailService;
     private final SubscriptionService subscriptionService;
-    private final SMSService smsService;
     private final AuthServiceClient authServiceClient;
 
     // Endpoint to send booking notifications
@@ -57,26 +56,24 @@ public class NotificationController {
 public ResponseEntity<String> notifyEventUpdated(@RequestBody EventNotificationRequest request) {
     log.info("Event updated: {}", request.getEventName());
 
-    emailService.notifySubscribersOfNewEvent(request);
 
-    // Sending SMS using dynamic phone number
-    String eventDetails = "The event " + request.getEventName() + " has been updated. Check for details.";
-    smsService.sendSMS(request.getUserPhone(), eventDetails); 
+     emailService.notifySubscribersOfUpdatedEvent(request);
 
     return ResponseEntity.ok("Event updated notification sent to all subscribers via SMS.");
 }
 
 
-    @GetMapping("/subscribe")
-    public ResponseEntity<String> subscribe(@RequestParam String email,
-                                            @RequestHeader("Authorization") String token) {
-        return authServiceClient.subscribe(email, token);
-    }
+   @GetMapping("/subscribe")
+public ResponseEntity<String> subscribe(@RequestParam String email) {
+    String result = subscriptionService.subscribe(email);
+    return ResponseEntity.ok(result);
+}
 
-    @GetMapping("/unsubscribe")
-    public ResponseEntity<String> unsubscribe(@RequestParam String email,
-                                              @RequestHeader("Authorization") String token) {
-        return authServiceClient.unsubscribe(email, token);
-    }
+@GetMapping("/unsubscribe")
+public ResponseEntity<String> unsubscribe(@RequestParam String email) {
+    String result = subscriptionService.unsubscribe(email);
+    return ResponseEntity.ok(result);
+}
+
 
 }
