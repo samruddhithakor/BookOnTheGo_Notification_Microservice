@@ -9,10 +9,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value; 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
@@ -23,45 +21,22 @@ import java.nio.file.Path;
 @Slf4j
 public class TicketService {
 
-    private final RestTemplate restTemplate;
+    // No need for RestTemplate and external service URLs anymore
 
-    @Value("${booking-service.url}")
-    private String bookingServiceUrl; // Use values from configuration
-    @Value("${event-service.url}")
-    private String eventServiceUrl;   // Use values from configuration
-
-    public File generateTicketAsPDF(BookingNotificationRequest request) throws Exception {
-        // Fetch Event and Booking Data
-        EventNotificationRequest event = fetchEventInfo(request.getEventId());
-        BookingNotificationRequest booking = fetchBookingInfo(request.getBookingId());
+    public File generateTicketAsPDF(BookingNotificationRequest booking, EventNotificationRequest event) throws Exception {
+        // Use the provided event and booking data directly
 
         TicketInfo ticketInfo = TicketInfo.builder()
-                .bookingId(request.getBookingId())
+                .bookingId(booking.getBookingId())
                 .attendeeName(booking.getAttendeeName())
                 .eventName(event.getEventName())
                 .eventDate(event.getEventDate())
                 .eventTime(event.getEventTime())
                 .venue(event.getVenue())
-                .qrCodeText("BOOKING-" + request.getBookingId())
+                .qrCodeText("BOOKING-" + booking.getBookingId())
                 .build();
 
         return generateTicketAsPDF(ticketInfo);
-    }
-
-    private EventNotificationRequest fetchEventInfo(String eventId) {
-        try {
-            return restTemplate.getForObject(eventServiceUrl + "/event/" + eventId, EventNotificationRequest.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch event info: " + e.getMessage());
-        }
-    }
-
-    private BookingNotificationRequest fetchBookingInfo(String bookingId) {
-        try {
-            return restTemplate.getForObject(bookingServiceUrl + "/booking/" + bookingId, BookingNotificationRequest.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch booking info: " + e.getMessage());
-        }
     }
 
     public File generateTicketAsPDF(TicketInfo info) throws Exception {
