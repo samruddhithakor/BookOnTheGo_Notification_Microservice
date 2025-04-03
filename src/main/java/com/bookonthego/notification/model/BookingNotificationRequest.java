@@ -9,11 +9,9 @@ import lombok.*;
 @Builder
 public class BookingNotificationRequest {
     private String userEmail;
-    private String attendeeName;
     private String eventName;
     private String eventDate;
     private String eventTime;
     private String venue;
     private String bookingId;
-    private String eventId;
 }

@@ -28,7 +28,6 @@ public class TicketService {
 
         TicketInfo ticketInfo = TicketInfo.builder()
                 .bookingId(booking.getBookingId())
-                .attendeeName(booking.getAttendeeName())
                 .eventName(event.getEventName())
                 .eventDate(event.getEventDate())
                 .eventTime(event.getEventTime())
@@ -56,7 +55,6 @@ public class TicketService {
 
         document.add(new Paragraph("E-Ticket: " + info.getBookingId(), titleFont));
         document.add(Chunk.NEWLINE);
-        document.add(new Paragraph("Name: " + info.getAttendeeName(), textFont));
         document.add(new Paragraph("Event: " + info.getEventName(), textFont));
         document.add(new Paragraph("Date: " + info.getEventDate(), textFont));
         document.add(new Paragraph("Time: " + info.getEventTime(), textFont));

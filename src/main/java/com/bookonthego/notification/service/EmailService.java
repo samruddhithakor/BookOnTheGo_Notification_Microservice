@@ -35,7 +35,6 @@ public class EmailService {
     public void sendBookingConfirmation(BookingNotificationRequest request) {
         try {
             EventNotificationRequest event = EventNotificationRequest.builder()
-                    .eventId(request.getEventId())
                     .eventName(request.getEventName())
                     .eventDate(request.getEventDate())
                     .eventTime(request.getEventTime())
@@ -49,7 +48,6 @@ public class EmailService {
             helper.setSubject("Booking Confirmation - " + event.getEventName());
 
             Context context = new Context();
-            context.setVariable("name", request.getAttendeeName());
             context.setVariable("eventName", event.getEventName());
             context.setVariable("eventDate", event.getEventDate());
             context.setVariable("eventTime", event.getEventTime());
@@ -61,7 +59,6 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             TicketInfo ticketInfo = TicketInfo.builder()
-                    .attendeeName(request.getAttendeeName())
                     .bookingId(request.getBookingId())
                     .eventName(event.getEventName())
                     .eventDate(event.getEventDate())
@@ -103,7 +100,6 @@ public class EmailService {
     public void sendPaymentConfirmation(PaymentNotificationRequest request) {
         try {
             EventNotificationRequest event = EventNotificationRequest.builder()
-                    .eventId(request.getEventId())
                     .eventName(request.getEventName())
                     .eventDate(request.getEventDate())
                     .eventTime(request.getEventTime())
@@ -117,7 +113,6 @@ public class EmailService {
             helper.setSubject("Payment Confirmation - " + event.getEventName());
 
             Context context = new Context();
-            context.setVariable("name", request.getAttendeeName());
             context.setVariable("eventName", event.getEventName());
             context.setVariable("eventDate", event.getEventDate());
             context.setVariable("eventTime", event.getEventTime());
@@ -128,7 +123,6 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             TicketInfo ticketInfo = TicketInfo.builder()
-                    .attendeeName(request.getAttendeeName())
                     .bookingId(request.getBookingId())
                     .eventName(event.getEventName())
                     .eventDate(event.getEventDate())
@@ -215,6 +209,5 @@ public void notifySubscribersOfUpdatedEvent(EventNotificationRequest event) {
         }
     }
 }
-
 
 }
