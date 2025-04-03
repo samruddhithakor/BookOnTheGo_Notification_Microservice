@@ -216,45 +216,5 @@ public void notifySubscribersOfUpdatedEvent(EventNotificationRequest event) {
     }
 }
 
-    public void sendSubscriptionConfirmation(String email) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(email);
-            helper.setSubject("You're Subscribed to BookOnTheGo!");
-
-            Context context = new Context();
-            context.setVariable("unsubscribeLink", BASE_URL + "/unsubscribe?email=" + email);
-
-            String htmlContent = templateEngine.process("subscription-confirmation.html", context);
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-            log.info("Sent subscription confirmation to {}", email);
-        } catch (Exception e) {
-            log.error("Failed to send subscription confirmation to " + email, e);
-        }
-    }
-
-    public void sendUnsubscriptionConfirmation(String email) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            helper.setTo(email);
-            helper.setSubject("You've Unsubscribed from BookOnTheGo");
-
-            Context context = new Context();
-            context.setVariable("resubscribeLink", BASE_URL + "/subscribe?email=" + email);
-
-            String htmlContent = templateEngine.process("unsubscription-confirmation.html", context);
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-            log.info("Sent unsubscription confirmation to {}", email);
-        } catch (Exception e) {
-            log.error("Failed to send unsubscription confirmation to " + email, e);
-        }
-    }
 }

@@ -15,6 +15,8 @@
             <p><strong>Time:</strong> <span th:text="${eventTime}">11:00 AM</span></p>
             <p><strong>Venue:</strong> <span th:text="${venue}">City Arena</span></p>
         </div>
+        <!-- Add an image dynamically from the backend -->
+        <img th:src="@{${eventImageUrl}}" alt="Event Image" style="width:100%; height:auto;">
 
         <p><a href="https://bookonthego.com" style="background:#28a745; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">Book Now</a></p>
 
