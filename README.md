@@ -76,10 +76,6 @@ Run unit and integration tests:
 bash
 mvn test  
 
-## Contributors  
-
-- Anupam Chopra - [GitHub Profile](https://github.com/AnupamC16/BookOnTheGo_Notification_Service)  
-
 ## License  
 
 This project is licensed under the MIT License - see the LICENSE file for details.
